@@ -91,10 +91,19 @@ builder.Services.AddHttpClient<IaImagemService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+try
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Erro ao aplicar migrations:");
+    Console.WriteLine(ex.Message);
+    throw;
 }
 
 app.UseCors("PermitirTudo");
