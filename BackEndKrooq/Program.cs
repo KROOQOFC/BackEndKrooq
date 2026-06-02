@@ -27,8 +27,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "http://localhost:5174",
 
-                // Depois que subir o front no Railway, coloque a URL real aqui:
-                "https://SEU-FRONTEND.up.railway.app"
+                "https://front-end-krooq-production.up.railway.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
