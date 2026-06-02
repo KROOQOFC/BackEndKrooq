@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 var port = Environment.GetEnvironmentVariable("PORT");
@@ -26,10 +25,13 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:5173",
-                "http://localhost:5174"
+                "http://localhost:5174",
+
+                // Depois que subir o front no Railway, coloque a URL real aqui:
+                "https://SEU-FRONTEND.up.railway.app"
             )
             .AllowAnyHeader()
-            .AllowAnyMethod(); 
+            .AllowAnyMethod();
     });
 });
 
@@ -40,6 +42,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    throw new Exception("Jwt:Key não foi configurado.");
+}
+
+if (string.IsNullOrWhiteSpace(jwtIssuer))
+{
+    throw new Exception("Jwt:Issuer não foi configurado.");
+}
+
+if (string.IsNullOrWhiteSpace(jwtAudience))
+{
+    throw new Exception("Jwt:Audience não foi configurado.");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -53,8 +70,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
+
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey!)
+                Encoding.UTF8.GetBytes(jwtKey)
             )
         };
     });
@@ -65,6 +83,7 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ProjetoService>();
 builder.Services.AddScoped<AmbienteService>();
+
 builder.Services.AddHttpClient<OpenAiService>();
 builder.Services.AddScoped<IaService>();
 builder.Services.AddScoped<EstimativaCustoService>();
@@ -79,7 +98,15 @@ app.MapScalarApiReference();
 
 app.MapGet("/", () => Results.Redirect("/Scalar/"));
 
+var pastaUploadsIa = Path.Combine(app.Environment.WebRootPath ?? "wwwroot", "uploads", "ia");
+
+if (!Directory.Exists(pastaUploadsIa))
+{
+    Directory.CreateDirectory(pastaUploadsIa);
+}
+
 app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
