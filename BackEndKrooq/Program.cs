@@ -26,8 +26,8 @@ builder.Services.AddCors(options =>
             .WithOrigins(
                 "http://localhost:5173",
                 "http://localhost:5174",
-
-                "https://Krooq.up.railway.app"
+                "https://krooq.up.railway.app",
+                "https://front-end-krooq-production.up.railway.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
