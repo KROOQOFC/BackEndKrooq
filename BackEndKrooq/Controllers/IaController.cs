@@ -153,5 +153,32 @@ namespace BackEndKrooq.Controllers
 
             return Ok(imagens);
         }
+        [HttpGet("teste-arquivos")]
+        [AllowAnonymous]
+        public IActionResult TesteArquivos()
+        {
+            var pasta = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "uploads",
+                "ia"
+            );
+
+            if (!Directory.Exists(pasta))
+            {
+                return Ok(new
+                {
+                    pastaExiste = false,
+                    caminho = pasta
+                });
+            }
+
+            return Ok(new
+            {
+                pastaExiste = true,
+                caminho = pasta,
+                arquivos = Directory.GetFiles(pasta)
+            });
+        }
     }
 }
