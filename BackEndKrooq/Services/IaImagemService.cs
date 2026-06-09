@@ -117,6 +117,8 @@ namespace BackEndKrooq.Services
                 "ia"
             );
 
+            Console.WriteLine($"Pasta: {pastaUploads}");
+
             if (!Directory.Exists(pastaUploads))
             {
                 Directory.CreateDirectory(pastaUploads);
@@ -126,9 +128,15 @@ namespace BackEndKrooq.Services
 
             var caminhoCompleto = Path.Combine(pastaUploads, nomeArquivo);
 
+            Console.WriteLine($"Arquivo: {caminhoCompleto}");
+
             var bytesImagem = Convert.FromBase64String(imagemBase64);
 
+            Console.WriteLine($"Bytes recebidos: {bytesImagem.Length}");
+
             File.WriteAllBytes(caminhoCompleto, bytesImagem);
+
+            Console.WriteLine($"Arquivo existe? {File.Exists(caminhoCompleto)}");
 
             return $"/uploads/ia/{nomeArquivo}";
         }
@@ -186,6 +194,7 @@ Estilo desejado:
             );
 
             var responseContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseContent);
 
             if (!response.IsSuccessStatusCode)
             {
