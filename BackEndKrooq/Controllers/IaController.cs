@@ -180,5 +180,17 @@ namespace BackEndKrooq.Controllers
                 arquivos = Directory.GetFiles(pasta)
             });
         }
+        [HttpGet("teste-webroot")]
+        [AllowAnonymous]
+        public IActionResult TesteWebRoot(
+    [FromServices] IWebHostEnvironment env)
+        {
+            return Ok(new
+            {
+                CurrentDirectory = Directory.GetCurrentDirectory(),
+                WebRootPath = env.WebRootPath,
+                ContentRootPath = env.ContentRootPath
+            });
+        }
     }
 }
