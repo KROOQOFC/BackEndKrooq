@@ -112,7 +112,16 @@ app.MapScalarApiReference();
 
 app.MapGet("/", () => Results.Redirect("/Scalar/"));
 
-var pastaUploadsIa = Path.Combine(app.Environment.WebRootPath ?? "wwwroot", "uploads", "ia");
+var webRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+
+if (!Directory.Exists(webRoot))
+{
+    Directory.CreateDirectory(webRoot);
+}
+
+app.Environment.WebRootPath = webRoot;
+
+var pastaUploadsIa = Path.Combine(webRoot, "uploads", "ia");
 
 if (!Directory.Exists(pastaUploadsIa))
 {

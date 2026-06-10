@@ -4,6 +4,7 @@ using BackEndKrooq.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BackEndKrooq.Services
 {
@@ -12,15 +13,18 @@ namespace BackEndKrooq.Services
         private readonly AppDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _environment;
 
         public IaImagemService(
             AppDbContext context,
             HttpClient httpClient,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             _context = context;
             _httpClient = httpClient;
             _configuration = configuration;
+            _environment = environment;
         }
 
         public async Task<ImagemIaRespostaDTO?> GerarImagem(int usuarioId, GerarImagemDTO dto)
@@ -110,9 +114,18 @@ namespace BackEndKrooq.Services
 
         private string SalvarImagemNoServidor(string imagemBase64, int projetoId)
         {
+            var webRoot = _environment.WebRootPath;
+
+            if (string.IsNullOrWhiteSpace(webRoot))
+            {
+                webRoot = Path.Combine(
+                    _environment.ContentRootPath,
+                    "wwwroot"
+                );
+            }
+
             var pastaUploads = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
+                webRoot,
                 "uploads",
                 "ia"
             );
