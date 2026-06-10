@@ -140,4 +140,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine($"WebRoot: {app.Environment.WebRootPath}");
+Console.WriteLine($"ContentRoot: {app.Environment.ContentRootPath}");
+
 app.Run();
