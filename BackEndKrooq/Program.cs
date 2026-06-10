@@ -130,6 +130,11 @@ if (!Directory.Exists(pastaUploadsIa))
 
 app.UseStaticFiles();
 
+File.WriteAllText(
+    Path.Combine(app.Environment.WebRootPath, "teste.txt"),
+    "KROOQ"
+);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
