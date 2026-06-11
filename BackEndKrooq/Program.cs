@@ -8,6 +8,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseWebRoot("wwwroot");
+
 var port = Environment.GetEnvironmentVariable("PORT");
 
 if (!string.IsNullOrEmpty(port))
@@ -112,16 +114,16 @@ app.MapScalarApiReference();
 
 app.MapGet("/", () => Results.Redirect("/Scalar/"));
 
-var webRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot");
-
-if (!Directory.Exists(webRoot))
+if (!Directory.Exists(app.Environment.WebRootPath))
 {
-    Directory.CreateDirectory(webRoot);
+    Directory.CreateDirectory(app.Environment.WebRootPath);
 }
 
-app.Environment.WebRootPath = webRoot;
-
-var pastaUploadsIa = Path.Combine(webRoot, "uploads", "ia");
+var pastaUploadsIa = Path.Combine(
+    app.Environment.WebRootPath,
+    "uploads",
+    "ia"
+);
 
 if (!Directory.Exists(pastaUploadsIa))
 {
