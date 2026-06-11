@@ -2,13 +2,12 @@ using BackEndKrooq.Data;
 using BackEndKrooq.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.WebHost.UseWebRoot("wwwroot");
 
 var port = Environment.GetEnvironmentVariable("PORT");
 
@@ -130,7 +129,13 @@ if (!Directory.Exists(pastaUploadsIa))
     Directory.CreateDirectory(pastaUploadsIa);
 }
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        app.Environment.WebRootPath
+    ),
+    RequestPath = ""
+});
 
 File.WriteAllText(
     Path.Combine(app.Environment.WebRootPath, "teste.txt"),
