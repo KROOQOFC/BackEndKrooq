@@ -185,5 +185,21 @@ namespace BackEndKrooq.Controllers
                 ContentRootPath = env.ContentRootPath
             });
         }
+        [HttpGet("teste-arquivo")]
+        [AllowAnonymous]
+        public IActionResult TesteArquivo(
+    [FromServices] IWebHostEnvironment env)
+        {
+            var arquivo = Path.Combine(
+                env.WebRootPath,
+                "teste.txt"
+            );
+
+            return Ok(new
+            {
+                existe = System.IO.File.Exists(arquivo),
+                caminho = arquivo
+            });
+        }
     }
 }
