@@ -201,5 +201,14 @@ namespace BackEndKrooq.Controllers
                 caminho = arquivo
             });
         }
+        [HttpGet("teste-static")]
+        [AllowAnonymous]
+        public IActionResult TesteStatic()
+        {
+            return PhysicalFile(
+                "/app/out/wwwroot/teste.txt",
+                "text/plain"
+            );
+        }
     }
 }
