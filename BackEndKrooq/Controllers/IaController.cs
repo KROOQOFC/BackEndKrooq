@@ -155,29 +155,22 @@ namespace BackEndKrooq.Controllers
         }
         [HttpGet("teste-arquivos")]
         [AllowAnonymous]
-        public IActionResult TesteArquivos()
+        public IActionResult TesteArquivos(
+            [FromServices] IWebHostEnvironment env)
         {
             var pasta = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
+                env.WebRootPath,
                 "uploads",
                 "ia"
             );
 
-            if (!Directory.Exists(pasta))
-            {
-                return Ok(new
-                {
-                    pastaExiste = false,
-                    caminho = pasta
-                });
-            }
-
             return Ok(new
             {
-                pastaExiste = true,
+                pastaExiste = Directory.Exists(pasta),
                 caminho = pasta,
-                arquivos = Directory.GetFiles(pasta)
+                arquivos = Directory.Exists(pasta)
+                    ? Directory.GetFiles(pasta)
+                    : []
             });
         }
         [HttpGet("teste-webroot")]
