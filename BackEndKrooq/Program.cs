@@ -114,7 +114,20 @@ app.MapGet("/", () => Results.Redirect("/Scalar/"));
 
 var webRoot = app.Environment.WebRootPath;
 
+if (string.IsNullOrWhiteSpace(webRoot))
+{
+    webRoot = Path.Combine(
+        app.Environment.ContentRootPath,
+        "wwwroot"
+    );
+}
+
 Console.WriteLine($"WebRoot encontrado: {webRoot}");
+
+if (!Directory.Exists(webRoot))
+{
+    Directory.CreateDirectory(webRoot);
+}
 
 var pastaUploadsIa = Path.Combine(
     webRoot,
