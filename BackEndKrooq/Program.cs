@@ -2,7 +2,6 @@ using BackEndKrooq.Data;
 using BackEndKrooq.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
@@ -113,13 +112,12 @@ app.MapScalarApiReference();
 
 app.MapGet("/", () => Results.Redirect("/Scalar/"));
 
-if (!Directory.Exists(app.Environment.WebRootPath))
-{
-    Directory.CreateDirectory(app.Environment.WebRootPath);
-}
+var webRoot = app.Environment.WebRootPath;
+
+Console.WriteLine($"WebRoot encontrado: {webRoot}");
 
 var pastaUploadsIa = Path.Combine(
-    app.Environment.WebRootPath,
+    webRoot,
     "uploads",
     "ia"
 );
@@ -129,16 +127,10 @@ if (!Directory.Exists(pastaUploadsIa))
     Directory.CreateDirectory(pastaUploadsIa);
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        app.Environment.WebRootPath
-    ),
-    RequestPath = ""
-});
+app.UseStaticFiles();
 
 File.WriteAllText(
-    Path.Combine(app.Environment.WebRootPath, "teste.txt"),
+    Path.Combine(webRoot, "teste.txt"),
     "KROOQ"
 );
 

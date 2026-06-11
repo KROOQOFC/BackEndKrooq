@@ -173,9 +173,9 @@ namespace BackEndKrooq.Controllers
                     : []
             });
         }
-        [HttpGet("teste-webroot")]
+        [HttpGet("teste-webrooot")]
         [AllowAnonymous]
-        public IActionResult TesteWebRoot(
+        public IActionResult TesteWebRooot(
     [FromServices] IWebHostEnvironment env)
         {
             return Ok(new
@@ -209,6 +209,28 @@ namespace BackEndKrooq.Controllers
                 "/app/out/wwwroot/teste.txt",
                 "text/plain"
             );
+        }
+        [HttpGet("imagem-arquivo")]
+        [AllowAnonymous]
+        public IActionResult ImagemArquivo()
+        {
+            var caminho = "/app/out/wwwroot/teste.txt";
+
+            return PhysicalFile(
+                caminho,
+                "text/plain"
+            );
+        }
+        [HttpGet("teste-webroot")]
+        [AllowAnonymous]
+        public IActionResult TesteWebRoot(
+    [FromServices] IWebHostEnvironment env)
+        {
+            return Ok(new
+            {
+                webRoot = env.WebRootPath,
+                existe = Directory.Exists(env.WebRootPath)
+            });
         }
     }
 }
