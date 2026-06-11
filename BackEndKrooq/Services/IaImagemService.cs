@@ -65,6 +65,11 @@ namespace BackEndKrooq.Services
                 return null;
             }
 
+            Console.WriteLine("================================");
+            Console.WriteLine("Base64 vazio? " + string.IsNullOrWhiteSpace(imagemBase64));
+            Console.WriteLine("Tamanho base64: " + imagemBase64.Length);
+            Console.WriteLine("================================");
+
             var urlImagem = SalvarImagemNoServidor(imagemBase64, projeto.Id);
 
             var imagemIa = new ImagemIa
@@ -148,6 +153,11 @@ namespace BackEndKrooq.Services
             Console.WriteLine($"Bytes recebidos: {bytesImagem.Length}");
 
             File.WriteAllBytes(caminhoCompleto, bytesImagem);
+            Console.WriteLine("================================");
+            Console.WriteLine($"WebRoot: {_environment.WebRootPath}");
+            Console.WriteLine($"Arquivo salvo: {caminhoCompleto}");
+            Console.WriteLine($"Existe: {File.Exists(caminhoCompleto)}");
+            Console.WriteLine("================================");
 
             Console.WriteLine($"Arquivo existe? {File.Exists(caminhoCompleto)}");
 
