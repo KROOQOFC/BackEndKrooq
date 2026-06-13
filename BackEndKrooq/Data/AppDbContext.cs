@@ -17,5 +17,8 @@ namespace BackEndKrooq.Data
 
         public DbSet<MensagemIa> MensagensIa { get; set; }
         public DbSet<ImagemIa> ImagensIa { get; set; }
+        public DbSet<Tarefa> Tarefas { get; set; }
+
+        public DbSet<Meta> Metas { get; set; }
     }
 }

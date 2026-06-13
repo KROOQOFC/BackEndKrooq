@@ -87,6 +87,7 @@ builder.Services.AddHttpClient<OpenAiService>();
 builder.Services.AddScoped<IaService>();
 builder.Services.AddScoped<EstimativaCustoService>();
 builder.Services.AddHttpClient<IaImagemService>();
+builder.Services.AddScoped<TarefaService>();
 
 var app = builder.Build();
 
