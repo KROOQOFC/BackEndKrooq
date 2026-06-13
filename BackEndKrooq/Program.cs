@@ -88,6 +88,9 @@ builder.Services.AddScoped<IaService>();
 builder.Services.AddScoped<EstimativaCustoService>();
 builder.Services.AddHttpClient<IaImagemService>();
 builder.Services.AddScoped<TarefaService>();
+builder.Services.AddScoped<MetaService>();
+
+builder.Services.AddScoped<DashboardService>();
 
 var app = builder.Build();
 

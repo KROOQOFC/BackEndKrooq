@@ -1,21 +1,21 @@
-﻿namespace BackEndKrooq.Models.DTO
+﻿namespace BackEndKrooq.DTO
 {
     public class DashboardDTO
     {
         public string NomeUsuario { get; set; } = string.Empty;
 
-        public int TotalProjetos { get; set; }
-
-        public int ProjetosAndamento { get; set; }
+        public int ProjetosAtivos { get; set; }
 
         public int ProjetosConcluidos { get; set; }
 
-        public int TotalTarefas { get; set; }
+        public int TarefasPendentes { get; set; }
 
         public int TarefasConcluidas { get; set; }
 
-        public int ProgressoGeral { get; set; }
+        public int MetasPendentes { get; set; }
 
-        public List<MetaDTO> Metas { get; set; } = [];
+        public int MetasConcluidas { get; set; }
+
+        public int ProgressoMedioProjetos { get; set; }
     }
 }

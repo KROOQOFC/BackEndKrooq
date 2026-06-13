@@ -30,5 +30,6 @@
 
         public bool Ativo { get; set; } = true;
         public List<Projeto> Projetos { get; set; } = new();
+        public List<Meta> Metas { get; set; } = new();
     }
 }

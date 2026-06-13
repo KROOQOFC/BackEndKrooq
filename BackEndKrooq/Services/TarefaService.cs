@@ -60,19 +60,25 @@ namespace BackEndKrooq.Services
             if (!projetoExiste)
                 return null;
 
+            if (dto.Progresso < 0 || dto.Progresso > 100)
+                return null;
+
             var tarefa = new Tarefa
             {
                 Titulo = dto.Titulo,
                 Descricao = dto.Descricao,
                 Progresso = dto.Progresso,
-                Status = dto.Status,
+                Status = ObterStatusTarefa(dto.Progresso),
                 DataInicio = dto.DataInicio,
                 DataFim = dto.DataFim,
                 ProjetoId = dto.ProjetoId
             };
 
             _context.Tarefas.Add(tarefa);
+
             await _context.SaveChangesAsync();
+
+            await AtualizarProgressoProjeto(dto.ProjetoId);
 
             return new TarefaRespostaDTO
             {
@@ -94,14 +100,19 @@ namespace BackEndKrooq.Services
             if (tarefa == null)
                 return false;
 
+            if (dto.Progresso < 0 || dto.Progresso > 100)
+                return false;
+
             tarefa.Titulo = dto.Titulo;
             tarefa.Descricao = dto.Descricao;
             tarefa.Progresso = dto.Progresso;
-            tarefa.Status = dto.Status;
+            tarefa.Status = ObterStatusTarefa(dto.Progresso);
             tarefa.DataInicio = dto.DataInicio;
             tarefa.DataFim = dto.DataFim;
 
             await _context.SaveChangesAsync();
+
+            await AtualizarProgressoProjeto(tarefa.ProjetoId);
 
             return true;
         }
@@ -113,11 +124,69 @@ namespace BackEndKrooq.Services
             if (tarefa == null)
                 return false;
 
+            var projetoId = tarefa.ProjetoId;
+
             _context.Tarefas.Remove(tarefa);
 
             await _context.SaveChangesAsync();
 
+            await AtualizarProgressoProjeto(projetoId);
+
             return true;
+        }
+
+        private async Task AtualizarProgressoProjeto(int projetoId)
+        {
+            var projeto = await _context.Projetos
+                .FirstOrDefaultAsync(p => p.Id == projetoId);
+
+            if (projeto == null)
+                return;
+
+            var tarefas = await _context.Tarefas
+                .Where(t => t.ProjetoId == projetoId)
+                .ToListAsync();
+
+            if (!tarefas.Any())
+            {
+                projeto.Progresso = 0;
+                projeto.Status = "Não iniciado";
+            }
+            else
+            {
+                projeto.Progresso =
+                    (int)Math.Round(
+                        tarefas.Average(t => t.Progresso)
+                    );
+
+                if (projeto.Progresso == 100)
+                {
+                    projeto.Status = "Concluído";
+                }
+                else if (projeto.Progresso > 0)
+                {
+                    projeto.Status = "Em andamento";
+                }
+                else
+                {
+                    projeto.Status = "Não iniciado";
+                }
+            }
+
+            projeto.DataAtualizacao = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+        }
+
+        private string ObterStatusTarefa(int progresso)
+        {
+            if (progresso == 100)
+                return "Concluída";
+
+            if (progresso > 0)
+                return "Em andamento";
+
+            return "Pendente";
         }
     }
 }

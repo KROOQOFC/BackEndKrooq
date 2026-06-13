@@ -1,24 +1,32 @@
-﻿//using Microsoft.AspNetCore.Mvc;
+﻿using BackEndKrooq.Services;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace BackEndKrooq.Controllers
-//{
-//    [ApiController]
-//    [Route("api/[controller]")]
-//    public class DashboardController : ControllerBase
-//    {
-//        private readonly DashboardService _dashboardService;
+namespace BackEndKrooq.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DashboardController : ControllerBase
+    {
+        private readonly DashboardService _dashboardService;
 
-//        public DashboardController(DashboardService dashboardService)
-//        {
-//            _dashboardService = dashboardService;
-//        }
+        public DashboardController(
+            DashboardService dashboardService)
+        {
+            _dashboardService = dashboardService;
+        }
 
-//        [HttpGet]
-//        public async Task<IActionResult> ObterDashboard()
-//        {
-//            var dados = await _dashboardService.ObterDashboardAsync();
+        [HttpGet("{usuarioId}")]
+        public async Task<IActionResult> ObterDashboard(
+            int usuarioId)
+        {
+            var dashboard =
+                await _dashboardService
+                .ObterDashboard(usuarioId);
 
-//            return Ok(dados);
-//        }
-//    }
-//}
+            if (dashboard == null)
+                return NotFound();
+
+            return Ok(dashboard);
+        }
+    }
+}
